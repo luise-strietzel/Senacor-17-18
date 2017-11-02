@@ -9,8 +9,8 @@ public class CalculatorTest {
 
     @Test
     public void addTest(){
-        int result = sut.add(5,5);
+        int result = sut.add(10,5);
 
-        Assert.assertEquals("5+5 should be 10", 10, result);
+        Assert.assertEquals("5+5 should be 15", 15, result);
     }
 }
