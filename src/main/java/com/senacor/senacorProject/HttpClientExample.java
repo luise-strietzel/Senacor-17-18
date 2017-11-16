@@ -112,6 +112,7 @@ public class HttpClientExample {
             result.append(line);
         }
 
+
         System.out.println(result.toString());
 
     }
