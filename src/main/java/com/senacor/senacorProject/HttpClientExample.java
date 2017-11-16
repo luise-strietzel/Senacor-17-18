@@ -41,12 +41,14 @@ public class HttpClientExample {
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
         HttpClient client = new DefaultHttpClient();
-        HttpGet request = new HttpGet(url);
+        HttpGet get = new HttpGet(url);
+
 
         // add request header
-        request.addHeader("User-Agent", USER_AGENT);
+        get.addHeader("User-Agent", USER_AGENT);
+        get.addHeader("Authorization", "Bearer d41d5875-885e-4e19-bbc7-7370faa22766");
 
-        HttpResponse response = client.execute(request);
+        HttpResponse response = client.execute(get);
 
         System.out.println("\nSending 'GET' request to URL : " + url);
         System.out.println("Response Code : " +
