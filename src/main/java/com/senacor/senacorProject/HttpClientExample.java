@@ -27,10 +27,10 @@ public class HttpClientExample {
 
         HttpClientExample http = new HttpClientExample();
 
-        System.out.println("Testing 1 - Send Http GET request");
+        System.out.println("Testing 01 - Send Http GET request");
         http.sendGet();
 
-        System.out.println("\nTesting - Send Http POST request");
+        System.out.println("\nTesting 02 - Send Http POST request");
         http.sendPost();
 
     }
