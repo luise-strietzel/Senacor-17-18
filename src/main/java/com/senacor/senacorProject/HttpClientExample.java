@@ -6,6 +6,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class HttpClientExample {
 
-    private final String USER_AGENT = "Google Chrome/61.0.3163.100";
+    private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
 
     public static void main(String[] args) throws Exception {
 
@@ -34,19 +35,22 @@ public class HttpClientExample {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
-        HttpClient client = HttpClients.createDefault();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
 
         // add header
         post.setHeader("USER-AGENT", USER_AGENT );
-        //post.setHeader("Authorization", "BASIC a2tiOnNlY3JldA==" );
-        //post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+        post.addHeader("Authorization", "BASIC a2tiOnNlY3JldA==" );
+        post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        //add body
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("username", "edieser"));
         nameValuePairs.add(new BasicNameValuePair("password", "password"));
-        nameValuePairs.add(new BasicNameValuePair("device_id", "20ee812cd3c821e1eaa2db40881a41527faaa4457d"));
+        nameValuePairs.add(new BasicNameValuePair("device_id", "2a32cd35b93e01307a10cba4fe01202c1394a7fe29"));
         nameValuePairs.add(new BasicNameValuePair("device_type", "PC"));
+        nameValuePairs.add(new BasicNameValuePair("sms_tan", "0108"));
+        nameValuePairs.add(new BasicNameValuePair("remember_device", "true"));
         nameValuePairs.add(new BasicNameValuePair("grant_type", "password"));
         nameValuePairs.add(new BasicNameValuePair("client_id", "kkb"));
 
