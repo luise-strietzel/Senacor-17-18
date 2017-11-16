@@ -23,20 +23,21 @@ public class HttpClientExample {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
 
+
     public static void main(String[] args) throws Exception {
 
         HttpClientExample http = new HttpClientExample();
 
         System.out.println("Testing 01 - Send Http GET request");
-        http.sendGet();
+        http.sendGet(http.sendPost());
 
-        System.out.println("\nTesting 02 - Send Http POST request");
-        http.sendPost();
+        //System.out.println("\nTesting 02 - Send Http POST request");
+        //http.sendPost();
 
     }
 
     // HTTP GET request
-    private void sendGet() throws Exception {
+    private void sendGet(String token) throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
@@ -46,7 +47,7 @@ public class HttpClientExample {
 
         // add request header
         get.addHeader("User-Agent", USER_AGENT);
-        get.addHeader("Authorization", "Bearer d41d5875-885e-4e19-bbc7-7370faa22766");
+        get.addHeader("Authorization", "Bearer" + token);
 
         HttpResponse response = client.execute(get);
 
@@ -68,7 +69,7 @@ public class HttpClientExample {
     }
 
     // HTTP POST request
-    private void sendPost() throws Exception {
+    private String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
@@ -95,25 +96,27 @@ public class HttpClientExample {
 
         HttpResponse response = client.execute(post);
 
-        //JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
-        //String token = json_auth.getString("access_token");
+        //System.out.println("\nSending 'POST' request to URL : " + url);
+        //System.out.println("Post parameters : " + post.getEntity());
+        //System.out.println("Response Code : " +
+        //       response.getStatusLine().getStatusCode());
 
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + post.getEntity());
-        System.out.println("Response Code : " +
-                response.getStatusLine().getStatusCode());
-
-        BufferedReader rd = new BufferedReader(
+        /*BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
 
         StringBuffer result = new StringBuffer();
         String line = "";
         while ((line = rd.readLine()) != null) {
             result.append(line);
-        }
+        }*/
 
+        JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
+        String token = json_auth.getString("access_token");
 
-        System.out.println(result.toString());
+        //System.out.println(result.toString());
+        //System.out.println(token);
+
+        return token;
 
     }
 
