@@ -1,18 +1,21 @@
 package com.senacor.senacorProject;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,31 +29,54 @@ public class HttpClientExample {
     public static void main(String[] args) throws Exception {
 
         HttpClientExample http = new HttpClientExample();
+        //ObjectMapper objectMapper = new ObjectMapper();
 
         System.out.println("Testing 01 - Send Http GET request");
-        http.sendGet();
+        http.sendGet(http.sendPost());
 
-        System.out.println("\nTesting 02 - Send Http POST request");
-        http.sendPost();
+        //System.out.println("\nTesting 02 - Send Http POST request");
+        //http.sendPost();
 
     }
 
     // HTTP GET request
-    private void sendGet() throws Exception {
+    private void sendGet(String token) throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
-        HttpClient client = new DefaultHttpClient();
+        HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(url);
+        Gson gson = new Gson();
 
 
         // add request header
         get.addHeader("User-Agent", USER_AGENT);
-        get.addHeader("Authorization", "Bearer d41d5875-885e-4e19-bbc7-7370faa22766");
+        get.addHeader("Authorization", "Bearer" + token);
 
         HttpResponse response = client.execute(get);
 
-        System.out.println("\nSending 'GET' request to URL : " + url);
+        //FileInputStream input = new FileInputStream("response.json");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+        // Datei als JSON-Objekt einlesen
+        JsonObject json = gson.fromJson(reader, JsonObject.class);
+
+        // Attribut "accounts" als Array lesen
+        JsonArray accounts = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts");
+
+        for(int i = 0; i < accounts.size(); i++) {
+            JsonObject accountEwaldDieser = accounts.get(0).getAsJsonObject();
+            System.out.println(accountEwaldDieser);
+
+            JsonObject financeInfo = accountEwaldDieser.getAsJsonObject("financeInfo");
+            System.out.println(financeInfo);
+
+            JsonElement availableFromDepositAmount = financeInfo.get("availableFromDepositAmount");
+            System.out.println(availableFromDepositAmount);
+            i++;
+        }
+
+        /*System.out.println("\nSending 'GET' request to URL : " + url);
         System.out.println("Response Code : " +
                 response.getStatusLine().getStatusCode());
 
@@ -61,14 +87,14 @@ public class HttpClientExample {
         String line = "";
         while ((line = rd.readLine()) != null) {
             result.append(line);
-        }
+        }*/
 
-        System.out.println(result.toString());
+        //System.out.println(result.toString());
 
     }
 
     // HTTP POST request
-    private void sendPost() throws Exception {
+    private String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
@@ -95,25 +121,27 @@ public class HttpClientExample {
 
         HttpResponse response = client.execute(post);
 
-        //JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
-        //String token = json_auth.getString("access_token");
+        //System.out.println("\nSending 'POST' request to URL : " + url);
+        //System.out.println("Post parameters : " + post.getEntity());
+        //System.out.println("Response Code : " +
+        //       response.getStatusLine().getStatusCode());
 
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + post.getEntity());
-        System.out.println("Response Code : " +
-                response.getStatusLine().getStatusCode());
-
-        BufferedReader rd = new BufferedReader(
+        /*BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
 
         StringBuffer result = new StringBuffer();
         String line = "";
         while ((line = rd.readLine()) != null) {
             result.append(line);
-        }
+        }*/
 
+        JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
+        String token = json_auth.getString("access_token");
 
-        System.out.println(result.toString());
+        //System.out.println(result.toString());
+        //System.out.println(token);
+
+        return token;
 
     }
 
