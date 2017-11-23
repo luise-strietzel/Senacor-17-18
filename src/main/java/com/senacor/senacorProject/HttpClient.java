@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -22,13 +21,13 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HttpClientExample {
+public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
 
     public static void main(String[] args) throws Exception {
 
-        HttpClientExample http = new HttpClientExample();
+        HttpClient http = new HttpClient();
         //ObjectMapper objectMapper = new ObjectMapper();
 
         System.out.println("Testing 01 - Send Http GET request");
@@ -44,7 +43,7 @@ public class HttpClientExample {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
-        HttpClient client = HttpClientBuilder.create().build();
+        org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(url);
         Gson gson = new Gson();
 
@@ -61,35 +60,10 @@ public class HttpClientExample {
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
 
-        // Attribut "accounts" als Array lesen
-        JsonArray accounts = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts");
+        // Element "Kontodaten" auslesen
+        JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
 
-        for(int i = 0; i < accounts.size(); i++) {
-            JsonObject accountEwaldDieser = accounts.get(0).getAsJsonObject();
-            System.out.println(accountEwaldDieser);
-
-            JsonObject financeInfo = accountEwaldDieser.getAsJsonObject("financeInfo");
-            System.out.println(financeInfo);
-
-            JsonElement availableFromDepositAmount = financeInfo.get("availableFromDepositAmount");
-            System.out.println(availableFromDepositAmount);
-            i++;
-        }
-
-        /*System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " +
-                response.getStatusLine().getStatusCode());
-
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }*/
-
-        //System.out.println(result.toString());
+        System.out.println(availableFromDepositAmount);
 
     }
 
@@ -98,12 +72,12 @@ public class HttpClientExample {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
-        HttpClient client = HttpClientBuilder.create().build();
+        org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
 
         // add header
-        post.addHeader("USER-AGENT", USER_AGENT );
-        post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==" );
+        post.addHeader("USER-AGENT", USER_AGENT);
+        post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==");
         //post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         //add body
@@ -121,25 +95,8 @@ public class HttpClientExample {
 
         HttpResponse response = client.execute(post);
 
-        //System.out.println("\nSending 'POST' request to URL : " + url);
-        //System.out.println("Post parameters : " + post.getEntity());
-        //System.out.println("Response Code : " +
-        //       response.getStatusLine().getStatusCode());
-
-        /*BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }*/
-
         JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
         String token = json_auth.getString("access_token");
-
-        //System.out.println(result.toString());
-        //System.out.println(token);
 
         return token;
 
