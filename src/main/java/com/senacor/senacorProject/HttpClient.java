@@ -60,7 +60,7 @@ public class HttpClient {
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
 
-        // Element "Kontodaten" auslesen
+        // Element "Kontodaten" auslesengit
         JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
 
         System.out.println(availableFromDepositAmount);
