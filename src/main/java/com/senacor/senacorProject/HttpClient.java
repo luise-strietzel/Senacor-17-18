@@ -2,7 +2,6 @@ package com.senacor.senacorProject;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
@@ -60,7 +59,7 @@ public class HttpClient {
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
 
-        // Element "Kontodaten" auslesen
+        // Element "Kontodaten" auslesengit
         JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
 
         System.out.println(availableFromDepositAmount);
