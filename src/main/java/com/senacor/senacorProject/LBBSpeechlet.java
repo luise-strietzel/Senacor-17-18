@@ -1,19 +1,17 @@
 package com.senacor.senacorProject;
 
-import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Random;
-
 public class LBBSpeechlet implements Speechlet {
 
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
     private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
     private static final String INTENT_WHATSMYLIMIT="Limit";
+
 
     @Override
     public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
