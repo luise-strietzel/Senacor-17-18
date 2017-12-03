@@ -13,11 +13,13 @@ public class LBBSpeechlet implements Speechlet {
     private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
     private static final String INTENT_WHATSMYLIMIT="Limit";
 
+
     public static void main(String[] args) throws Exception {
 
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
         mySpeechlet.handleKontostand();
     }
+
 
     @Override
     public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
