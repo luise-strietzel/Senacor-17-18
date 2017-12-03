@@ -1,19 +1,23 @@
 package com.senacor.senacorProject;
 
-import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
+import com.google.gson.JsonElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Random;
 
 public class LBBSpeechlet implements Speechlet {
 
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
     private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
     private static final String INTENT_WHATSMYLIMIT="Limit";
+
+    public static void main(String[] args) throws Exception {
+
+        LBBSpeechlet mySpeechlet = new LBBSpeechlet();
+        mySpeechlet.handleKontostand();
+    }
 
     @Override
     public void onSessionStarted(final SessionStartedRequest request, final Session session) throws SpeechletException {
@@ -36,7 +40,8 @@ public class LBBSpeechlet implements Speechlet {
         String intentName = request.getIntent().getName();
         if(INTENT_WHATSMYKONTOSTAND.equals(intentName))
         {
-            return handleKontostand(session);
+         //   return handleKontostand(session);
+            return handleKontostand();
         }
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
@@ -54,12 +59,23 @@ public class LBBSpeechlet implements Speechlet {
     }
 
 
-    private SpeechletResponse handleKontostand(Session session) {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("ich habe eine gewürfelt.");
-        return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
-    }
 
+    //  private SpeechletResponse handleKontostand(Session session) {
+    private SpeechletResponse handleKontostand() {
+        HttpClient myClient = new HttpClient();
+        System.out.println("wir testen die Methode handleKontostand");
+        try {
+            JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("mein KOntostand betreagt "+myKontostand+" Euro. Vielen Dank und bis zum nächsten mal.");
+            System.out.println("das steht in der Variable speech : "+speech.getText());
+            return SpeechletResponse.newTellResponse(speech);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
     private SpeechletResponse handleLimit(Session session){
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText("ich habe eine gewürfelt.");
