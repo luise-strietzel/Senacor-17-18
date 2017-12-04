@@ -23,23 +23,23 @@ import java.util.List;
 public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
+    private String kontostand;
 
-    public static void main(String[] args) throws Exception {
-
+    private static String setKontostand() throws Exception
+    {
         HttpClient http = new HttpClient();
-        //ObjectMapper objectMapper = new ObjectMapper();
+        http.kontostand = http.sendGet(http.sendPost()).getAsString();
+        return http.kontostand;
+    }
 
-        System.out.println("Testing 01 - Send Http GET request");
-        http.sendGet(http.sendPost());
-
-        //System.out.println("\nTesting 02 - Send Http POST request");
-        //http.sendPost();
-
+    public static String getKontostand() throws Exception{
+        setKontostand();
+        return setKontostand();
     }
 
     // HTTP GET request
     //protected muss wieder geändert werden
-    protected JsonElement sendGet(String token) throws Exception {
+    private JsonElement sendGet(String token) throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
@@ -64,14 +64,14 @@ public class HttpClient {
         // Element "Kontodaten" auslesengit
         JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
 
-        System.out.println(availableFromDepositAmount);
+        //System.out.println(availableFromDepositAmount);
         return availableFromDepositAmount;
 
     }
 
     // HTTP POST request
     //protected muss wieder geändert werden
-    protected String sendPost() throws Exception {
+    private String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
