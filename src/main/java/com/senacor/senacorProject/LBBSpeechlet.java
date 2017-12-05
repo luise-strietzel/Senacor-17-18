@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 public class LBBSpeechlet implements Speechlet {
 
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
-    private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
-    private static final String INTENT_WHATSMYLIMIT="Limit";
+    private static final String INTENT_WHATSMYKONTOSTAND="KontostandIntent";
+    private static final String INTENT_WHATSMYLIMIT="LimitIntent";
 
 
     public static void main(String[] args) throws Exception {
@@ -59,8 +59,6 @@ public class LBBSpeechlet implements Speechlet {
     public void onSessionEnded(final SessionEndedRequest request, final Session session) throws SpeechletException {
         log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
     }
-
-
 
     //  private SpeechletResponse handleKontostand(Session session) {
     private SpeechletResponse handleKontostand() {
