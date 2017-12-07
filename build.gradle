@@ -2,9 +2,9 @@ group 'com.senacor'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'com.github.johnrengelman.shadow', version: '2.0.1'
+/*apply plugin: 'com.github.johnrengelman.shadow', version: '2.0.1'
 sourceCompatibility = 1.8
-
+*/
 repositories {
     mavenCentral()
 }
@@ -25,3 +25,14 @@ dependencies {
     id 'java'
 }
 */
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
