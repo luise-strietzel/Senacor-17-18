@@ -17,7 +17,7 @@ public class LBBSpeechlet implements Speechlet {
     public static void main(String[] args) throws Exception {
 
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
-        mySpeechlet.handleKontostand();
+        //mySpeechlet.handleKontostand();
     }
 
 
@@ -31,7 +31,7 @@ public class LBBSpeechlet implements Speechlet {
     public SpeechletResponse onLaunch(final LaunchRequest request, final Session session) throws SpeechletException {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("Willkommen im LBB-Konto.Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.");
+        speech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.");
         return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
     }
 

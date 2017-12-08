@@ -1,7 +1,11 @@
 package com.senacor.senacorProject;
+import com.amazon.speech.speechlet.Context;
 import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
+import org.omg.CORBA.portable.InputStream;
+import org.omg.CORBA.portable.OutputStream;
 
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,8 +25,10 @@ Kann man unter dem Developer-Account -> Alexa Skill -> LBB-Konto -> Edit -> Skil
 
     static {
 
+        System.setProperty("com.amazon.speech.speechlet.servlet.disableRequestSignatureCheck", "true");
+
         supportedApplicationIds=new HashSet<>();  //erstellen eines neuen HashSets (Elemente werden als Hashtabelle gespeichert,damit das Programm schneller auf sie zugreifen kann)
-        supportedApplicationIds.add("amzn1.ask.skill.935c5193-d548-42ed-b6b5-945469f6e418");
+        //supportedApplicationIds.add("amzn1.ask.skill.935c5193-d548-42ed-b6b5-945469f6e418");
 
 /*HashSet wird befüllt mit .add und unsere LBB-Konto ApplicationId wird eingetragen.
 Mit der Id erlauben wir dem Handler auf unseren Skill zuzugreifen, wir können auch mehrere Ids hinzufügen (falls wir mehr Skills einbauen möchten)
@@ -33,6 +39,7 @@ Mit der Id erlauben wir dem Handler auf unseren Skill zuzugreifen, wir können a
         super(new LBBSpeechlet(), supportedApplicationIds);
 /*super (Konstruktor vom SpeechletRequestStreamHandler) hat Parameter: new speechlet(),supportedApplicationIds.
 Vergeben also unser Speechlet und die SupportedApplicationIds:  new LBBSpeechlet(),supportedApplicationIds
-*/
-    }
+*/  }
+
+
 }
