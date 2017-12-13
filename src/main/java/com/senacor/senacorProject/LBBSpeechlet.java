@@ -3,7 +3,6 @@ package com.senacor.senacorProject;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
-import com.google.gson.JsonElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,23 +94,11 @@ public class LBBSpeechlet implements Speechlet {
         speech.setText("bestimme wieviel seiten dein würfel hat oder würfle");
         return SpeechletResponse.newTellResponse(speech);
     }
-
-    private SpeechletResponse handleChooseDice(Intent intent, Session session) {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        if (intent.getSlot(SLOT_NUMBEROFSIDES).getValue() == null) {
-            speech.setText("ich habe nicht verstanden wieviele seiten der würfel haben soll.");
-        } else {
-            Integer numberOfSides = Integer.valueOf(intent.getSlot(SLOT_NUMBEROFSIDES).getValue().toString());
-            session.setAttribute(SESSION_NUMBEROFSIDES, numberOfSides);
-            speech.setText("ich benutze jetzt einen " + numberOfSides.toString() + " seitigen würfel");
-        }
-        return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
-    }
     */
 
     private Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
-        repromptSpeech.setText("ich habe dich nicht verstanden");
+        repromptSpeech.setText("Ich habe Sie nicht verstanden. Bitte fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.");
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(repromptSpeech);
         return reprompt;
