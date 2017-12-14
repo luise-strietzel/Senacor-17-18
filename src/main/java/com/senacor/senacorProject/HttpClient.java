@@ -2,12 +2,10 @@ package com.senacor.senacorProject;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -22,29 +20,30 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HttpClientExample {
+public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
+    private String kontostand;
 
-    public static void main(String[] args) throws Exception {
+    private static String setKontostand() throws Exception
+    {
+        HttpClient http = new HttpClient();
+        http.kontostand = http.sendGet(http.sendPost()).getAsString();
+        return http.kontostand;
+    }
 
-        HttpClientExample http = new HttpClientExample();
-        //ObjectMapper objectMapper = new ObjectMapper();
-
-        System.out.println("Testing 01 - Send Http GET request");
-        http.sendGet(http.sendPost());
-
-        //System.out.println("\nTesting 02 - Send Http POST request");
-        //http.sendPost();
-
+    public static String getKontostand() throws Exception{
+        setKontostand();
+        return setKontostand();
     }
 
     // HTTP GET request
-    private void sendGet(String token) throws Exception {
+    //protected muss wieder geändert werden
+    private JsonElement sendGet(String token) throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
-        HttpClient client = HttpClientBuilder.create().build();
+        org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(url);
         Gson gson = new Gson();
 
@@ -55,55 +54,33 @@ public class HttpClientExample {
 
         HttpResponse response = client.execute(get);
 
+
         //FileInputStream input = new FileInputStream("response.json");
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
 
-        // Attribut "accounts" als Array lesen
-        JsonArray accounts = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts");
+        // Element "Kontodaten" auslesengit
+        JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
 
-        for(int i = 0; i < accounts.size(); i++) {
-            JsonObject accountEwaldDieser = accounts.get(0).getAsJsonObject();
-            System.out.println(accountEwaldDieser);
-
-            JsonObject financeInfo = accountEwaldDieser.getAsJsonObject("financeInfo");
-            System.out.println(financeInfo);
-
-            JsonElement availableFromDepositAmount = financeInfo.get("availableFromDepositAmount");
-            System.out.println(availableFromDepositAmount);
-            i++;
-        }
-
-        /*System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " +
-                response.getStatusLine().getStatusCode());
-
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }*/
-
-        //System.out.println(result.toString());
+        //System.out.println(availableFromDepositAmount);
+        return availableFromDepositAmount;
 
     }
 
     // HTTP POST request
+    //protected muss wieder geändert werden
     private String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
-        HttpClient client = HttpClientBuilder.create().build();
+        org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
 
         // add header
-        post.addHeader("USER-AGENT", USER_AGENT );
-        post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==" );
+        post.addHeader("USER-AGENT", USER_AGENT);
+        post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==");
         //post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         //add body
@@ -121,25 +98,8 @@ public class HttpClientExample {
 
         HttpResponse response = client.execute(post);
 
-        //System.out.println("\nSending 'POST' request to URL : " + url);
-        //System.out.println("Post parameters : " + post.getEntity());
-        //System.out.println("Response Code : " +
-        //       response.getStatusLine().getStatusCode());
-
-        /*BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
-
-        StringBuffer result = new StringBuffer();
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
-        }*/
-
         JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
         String token = json_auth.getString("access_token");
-
-        //System.out.println(result.toString());
-        //System.out.println(token);
 
         return token;
 
