@@ -63,12 +63,12 @@ public class LBBSpeechlet implements Speechlet {
 
     //  private SpeechletResponse handleKontostand(Session session) {
     private SpeechletResponse handleKontostand() {
-        GetCreditBalance creditBalance = new GetCreditBalance();
+        Konto konto = new Konto();
         //System.out.println("wir testen die Methode handleKontostand");
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {

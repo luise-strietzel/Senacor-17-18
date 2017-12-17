@@ -39,8 +39,8 @@ public class HttpClient {
 
     // HTTP GET request
     //protected muss wieder geändert werden
-    private JsonElement sendGet(String token) throws Exception {
-
+    public JsonObject sendGet() throws Exception {
+        String token = sendPost();
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
         org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
@@ -60,18 +60,14 @@ public class HttpClient {
 
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
+        return json;
 
-        // Element "Kontodaten" auslesengit
-        JsonElement availableFromDepositAmount = json.getAsJsonObject("creditCardProgram").getAsJsonArray("accounts").get(0).getAsJsonObject().getAsJsonObject("financeInfo").get("availableFromDepositAmount");
-
-        //System.out.println(availableFromDepositAmount);
-        return availableFromDepositAmount;
 
     }
 
     // HTTP POST request
     //protected muss wieder geändert werden
-    private String sendPost() throws Exception {
+    public String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
