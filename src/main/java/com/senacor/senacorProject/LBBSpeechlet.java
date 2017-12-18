@@ -16,7 +16,7 @@ public class LBBSpeechlet implements Speechlet {
     public static void main(String[] args) throws Exception {
 
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
-        //mySpeechlet.handleKontostand();
+        mySpeechlet.handleKontostand();
     }
 
 

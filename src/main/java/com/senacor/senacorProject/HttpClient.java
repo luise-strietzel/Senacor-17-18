@@ -2,7 +2,6 @@ package com.senacor.senacorProject;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,22 +22,23 @@ import java.util.List;
 public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
-    private String kontostand;
+    private String token;
+    private JsonObject kontostand;
 
-    private static String setKontostand() throws Exception
+    private static JsonObject setKontostand() throws Exception
     {
         HttpClient http = new HttpClient();
-        http.kontostand = http.sendGet(http.sendPost()).getAsString();
+        http.token = http.sendPost();
+        http.kontostand = http.sendGet();
         return http.kontostand;
     }
 
-    public static String getKontostand() throws Exception{
+    public static JsonObject getKontostand() throws Exception{
         setKontostand();
         return setKontostand();
     }
 
     // HTTP GET request
-    //protected muss wieder geändert werden
     public JsonObject sendGet() throws Exception {
         String token = sendPost();
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
