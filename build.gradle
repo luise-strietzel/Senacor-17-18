@@ -2,9 +2,9 @@ group 'com.senacor'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-
+/*apply plugin: 'com.github.johnrengelman.shadow', version: '2.0.1'
 sourceCompatibility = 1.8
-
+*/
 repositories {
     mavenCentral()
 }
@@ -15,4 +15,24 @@ dependencies {
     compile 'org.apache.httpcomponents:httpclient:4.5'
     compile("org.json:json:20141113")
     compile 'com.google.code.gson:gson:2.2.4'
+    compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
+    compile 'com.amazonaws:aws-lambda-java-events:1.0.0'
+    compile 'com.amazon.alexa:alexa-skills-kit:1.8.1'
 }
+
+/*plugin{
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'java'
+}
+*/
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
