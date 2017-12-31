@@ -2,7 +2,6 @@ package com.senacor.senacorProject;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -23,22 +22,20 @@ import java.util.List;
 public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
-    private String kontostand;
+    private JsonObject kontostand;
 
-    private static String setKontostand() throws Exception
+    private static JsonObject setKontostand() throws Exception
     {
         HttpClient http = new HttpClient();
-        http.kontostand = http.sendGet(http.sendPost()).getAsString();
+        http.kontostand = http.sendGet();
         return http.kontostand;
     }
 
-    public static String getKontostand() throws Exception{
+    public static JsonObject getKontostand() throws Exception{
         setKontostand();
         return setKontostand();
     }
 
-    // HTTP GET request
-    //protected muss wieder geändert werden
     public JsonObject sendGet() throws Exception {
         String token = sendPost();
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
@@ -47,15 +44,11 @@ public class HttpClient {
         HttpGet get = new HttpGet(url);
         Gson gson = new Gson();
 
-
-        // add request header
         get.addHeader("User-Agent", USER_AGENT);
         get.addHeader("Authorization", "Bearer" + token);
 
         HttpResponse response = client.execute(get);
 
-
-        //FileInputStream input = new FileInputStream("response.json");
         BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         // Datei als JSON-Objekt einlesen
@@ -65,8 +58,6 @@ public class HttpClient {
 
     }
 
-    // HTTP POST request
-    //protected muss wieder geändert werden
     public String sendPost() throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
@@ -74,12 +65,9 @@ public class HttpClient {
         org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(url);
 
-        // add header
         post.addHeader("USER-AGENT", USER_AGENT);
         post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==");
-        //post.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        //add body
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         nameValuePairs.add(new BasicNameValuePair("username", "edieser"));
         nameValuePairs.add(new BasicNameValuePair("password", "password"));

@@ -1,19 +1,16 @@
 package com.senacor.senacorProject;
 
-
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import static com.senacor.senacorProject.HttpClient.getKontostand;
+import com.google.gson.JsonPrimitive;
 
 public class Konto {
     HttpClient httpclient = new HttpClient();
 
     public Float getKontostand() throws Exception {
 
-
         JsonObject json = httpclient.sendGet();
-        // Element "Kontodaten" auslesengit
+
+        // "Kontodaten" auslesen
         Float availableFromDepositAmount = json
                 .getAsJsonObject("creditCardProgram")
                 .getAsJsonArray("accounts")
@@ -23,7 +20,21 @@ public class Konto {
                 .get("availableFromDepositAmount")
                 .getAsFloat();
 
-        //System.out.println(availableFromDepositAmount);
         return availableFromDepositAmount;
+    }
+
+    public Float getLimit() throws Exception{
+
+        JsonObject json = httpclient.sendGet();
+
+        // "Limit" auslesen
+        Float limit = json
+                .getAsJsonObject("creditCardProgram")
+                //.getAsJsonPrimitive("partialPaymentInfo")
+                .getAsJsonObject()
+                .get("limit")
+                .getAsFloat();
+
+        return limit;
     }
 }
