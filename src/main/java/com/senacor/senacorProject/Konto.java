@@ -36,5 +36,34 @@ public class Konto {
                 .getAsFloat();
 
         return limit;
+
+
+
     }
+    public float getKonto() throws Exception{
+        JsonObject json = httpclient.sendGet();
+
+        // "Kontodaten" auslesen
+        Float availableFromDepositAmount = json
+                .getAsJsonObject("creditCardProgram")
+                .getAsJsonArray("accounts")
+                .get(0)
+                .getAsJsonObject()
+                .getAsJsonObject("financeInfo")
+                .get("availableFromDepositAmount")
+                .getAsFloat();
+
+
+
+        Float limit = json
+                .getAsJsonObject("creditCardProgram")
+                //.getAsJsonPrimitive("partialPaymentInfo")
+                .getAsJsonObject()
+                .get("limit")
+                .getAsFloat();
+
+        return limit + availableFromDepositAmount;
+
+    }
+
 }
