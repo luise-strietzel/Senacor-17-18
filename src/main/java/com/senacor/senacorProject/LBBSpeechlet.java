@@ -62,7 +62,7 @@ public class LBBSpeechlet implements Speechlet {
 
 
     //  private SpeechletResponse handleKontostand(Session session) {
-    private SpeechletResponse handleKontostand() {
+    public SpeechletResponse handleKontostand() {
         GetCreditBalance creditBalance = new GetCreditBalance();
         //System.out.println("wir testen die Methode handleKontostand");
         try {

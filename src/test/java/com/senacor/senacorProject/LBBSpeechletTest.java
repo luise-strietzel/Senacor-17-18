@@ -11,6 +11,14 @@ import org.junit.Test;
 import java.util.Locale;
 
 public class LBBSpeechletTest {
+   /* @Test
+    public void onSessionStarted() throws Exception {
+    }
+
+
+    @Test
+    public void onSessionEnded() throws Exception {
+    }*/
 
     private LBBSpeechlet sut = new LBBSpeechlet();
 
@@ -36,7 +44,7 @@ public class LBBSpeechletTest {
     }
 
     @Test
-    public void testOnIntent(String intent) throws SpeechletException {
+    public void testOnIntent(String intent) throws SpeechletException, Exception {
         String expected = "Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.";
         LaunchRequest launchRequest = LaunchRequest.builder()
                 .withRequestId("123")
@@ -54,18 +62,25 @@ public class LBBSpeechletTest {
 
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech kontospeech = new PlainTextOutputSpeech();
-            kontospeech.setText("Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.");
 
-        if(intent.equals(INTENT_WHATSMYLIMIT))
+                kontospeech.setText("Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+
+
+
+          //  kontospeech.setText("Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+        PlainTextOutputSpeech limitspeech = new PlainTextOutputSpeech();
+        limitspeech.setText("ich habe eine gewürfelt.");
+        if(intent.equals(INTENT_WHATSMYKONTOSTAND))
         {
             // springe in Methode handleLImit
-            Assert.assertEquals("Soll die handleLimit Methode auswählen", speech.getText(), mySpeechlet.handleKontostand(session));
+            Assert.assertEquals("Soll die handleLimit Methode auswählen", kontospeech.getText(), mySpeechlet.handleKontostand());
 
         }
-        else if(intent.equals(INTENT_WHATSMYKONTOSTAND))
+       /* else if(intent.equals(INTENT_WHATSMYLIMIT))
         {
-            //springe in Methode handleKontostand
-        }
+            Assert.assertEquals("Soll die handleLimit Methode auswählen", limitspeech.getText(), mySpeechlet.handleLimit());
+
+        }*/
 
         //SpeechletResponse speechletResponse = sut.onLaunch(launchRequest, session);
         //PlainTextOutputSpeech result = (PlainTextOutputSpeech) speechletResponse.getOutputSpeech();
@@ -75,12 +90,17 @@ public class LBBSpeechletTest {
 
     @Test
     public void testOnIntentWhatsMyLimit() {
-        // Hier Intent aufbauen für Whats my Limit
+        LBBSpeechlet mySpeechlet = new LBBSpeechlet();
+        String expAnswer = "Ihr Kontostand beträgt null Euro. Vielen Dank, bis zum nächsten Mal.";
+        Assert.assertEquals("Soll verifizieren, ob handleKOntostand die korrekten Daten zurückgibt", expAnswer, mySpeechlet.handleKontostand());
+
     }
 
     @Test
     public void testOnIntentWhatsMyKontostand() {
-        // Hier Intent aufbauen für Whats my Kontostand
+        LBBSpeechlet mySpeechlet = new LBBSpeechlet();
+        String expAnswer = "Ihr Kontostand beträgt null Euro. Vielen Dank, bis zum nächsten Mal.";
+        Assert.assertEquals("Soll verifizieren, ob handleKOntostand die korrekten Daten zurückgibt", expAnswer, mySpeechlet.handleKontostand());
 
     }
 }
