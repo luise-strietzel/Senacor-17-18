@@ -1,11 +1,7 @@
 package com.senacor.senacorProject;
-import com.amazon.speech.speechlet.Context;
+
 import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler;
-import org.omg.CORBA.portable.InputStream;
-import org.omg.CORBA.portable.OutputStream;
 
-
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 

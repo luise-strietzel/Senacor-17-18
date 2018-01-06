@@ -46,7 +46,7 @@ public class LBBSpeechlet implements Speechlet {
         }
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
-            return handleLimit(session);
+            return handleLimit();
         }
         else
         {
@@ -60,6 +60,25 @@ public class LBBSpeechlet implements Speechlet {
     }
 
 
+    public String callHandleKontostand()
+    {
+        GetCreditBalance creditBalance = new GetCreditBalance();
+        //System.out.println("wir testen die Methode handleKontostand");
+        try {
+            //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            return "Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String callHandleLimit()
+    {
+        return"ich habe eine gewürfelt.";
+    }
 
     //  private SpeechletResponse handleKontostand(Session session) {
     private SpeechletResponse handleKontostand() {
@@ -70,13 +89,14 @@ public class LBBSpeechlet implements Speechlet {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
+
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    private SpeechletResponse handleLimit(Session session){
+    private SpeechletResponse handleLimit(){
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText("ich habe eine gewürfelt.");
         return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
