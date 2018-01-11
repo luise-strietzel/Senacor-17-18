@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory;
 public class LBBSpeechlet implements Speechlet {
 
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
-    private static final String INTENT_WHATSMYKONTOSTAND = "Kontostand";
-    private static final String INTENT_WHATSMYLIMIT = "Limit";
+    private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
+    private static final String INTENT_WHATSMYLIMIT="Limit";
+    private static final String INTENT_WHATSMYKONTOSTANDLIMIT="Konto";
 
 
     public static void main(String[] args) throws Exception {
@@ -18,6 +19,8 @@ public class LBBSpeechlet implements Speechlet {
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
         mySpeechlet.handleKontostand();
         mySpeechlet.handleLimit();
+        mySpeechlet.handleKonto();
+
     }
 
 
@@ -41,11 +44,20 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onIntent requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
         String intentName = request.getIntent().getName();
-        if (INTENT_WHATSMYKONTOSTAND.equals(intentName)) {
+        if(INTENT_WHATSMYKONTOSTAND.equals(intentName))
+        {
+            //   return handleKontostand(session);
             return handleKontostand();
-        } else if (INTENT_WHATSMYLIMIT.equals(intentName)) {
+        }
+        else if (INTENT_WHATSMYLIMIT.equals(intentName))
+        {
             return handleLimit();
-        } else {
+        }
+        else if (INTENT_WHATSMYKONTOSTANDLIMIT.equals(intentName))
+        {
+            return handleKonto();
+        }
+        else{
             throw new SpeechletException("Invalid Intent");
         }
     }
@@ -117,19 +129,34 @@ public class LBBSpeechlet implements Speechlet {
         }
     }*/
 
-/*
-    private SpeechletResponse handleStopIntent() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("auf wiedersehen.");
-        return SpeechletResponse.newTellResponse(speech);
-    }
+    /*
+        private SpeechletResponse handleStopIntent() {
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("auf wiedersehen.");
+            return SpeechletResponse.newTellResponse(speech);
+        }
 
-    private SpeechletResponse handleHelpIntent() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("bestimme wieviel seiten dein würfel hat oder würfle");
-        return SpeechletResponse.newTellResponse(speech);
+        private SpeechletResponse handleHelpIntent() {
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("bestimme wieviel seiten dein würfel hat oder würfle");
+            return SpeechletResponse.newTellResponse(speech);
+        }
+        */
+    private SpeechletResponse handleKonto(){
+        Konto konto=new Konto();
+        //System.out.println("wir testen die Methode handleKontostand");
+        try {
+            //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro und ihr Limit"+ konto.getKonto()+" Euro. Vielen Dank und bis zum nächsten Mal.");
+            System.out.println(speech.getText());
+            return SpeechletResponse.newTellResponse(speech);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
-    */
 
     private Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
