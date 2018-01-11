@@ -14,3 +14,4 @@ public class CalculatorTest {
         Assert.assertEquals("10+20 should be 30", 30, result);
     }
 }
+
