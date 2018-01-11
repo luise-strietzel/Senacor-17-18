@@ -1,5 +1,7 @@
 package com.senacor.senacorProject;
 
+import com.amazon.speech.slu.ConfirmationStatus;
+import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import org.junit.Assert;
@@ -8,19 +10,16 @@ import org.junit.Test;
 import java.util.Locale;
 
 public class LBBSpeechletTest {
-   /* @Test
-    public void onSessionStarted() throws Exception {
-    }
+ /* @Test
+  public void onSessionStarted() throws Exception {
+  }
 
 
-    @Test
-    public void onSessionEnded() throws Exception {
-    }*/
+  @Test
+  public void onSessionEnded() throws Exception {
+  }*/
 
     private LBBSpeechlet sut = new LBBSpeechlet();
-
-    private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
-    private static final String INTENT_WHATSMYLIMIT="Limit";
 
     @Test
     public void testOnLaunch() throws SpeechletException {
@@ -39,63 +38,54 @@ public class LBBSpeechletTest {
 
         Assert.assertEquals("Soll willkommenstext beinhalten", expected, result.getText());
     }
-    // Intent myLimitIntent = new Intent("Limit", "NONE",null);
-    //  Assert.assertEquals("Soll die handleLimit Methode auswählen", kontospeech.getText(), mySpeechlet.callHandleKontostand());
 
     @Test
-    public void testOnIntent() throws SpeechletException, Exception {
+    public void testLimitIntent() throws Exception {
+        Intent myIntent = Intent.builder()
+                .withName("Limit")
+                .withConfirmationStatus(ConfirmationStatus.CONFIRMED)
+                .build();
         IntentRequest myIntentRequest = IntentRequest.builder()
                 .withRequestId("123")
+                .withIntent(myIntent)
                 .withLocale(Locale.GERMANY)
                 .build();
         Session session = Session.builder()
                 .withSessionId("23423")
                 .build();
 
-        String intentName = myIntentRequest.getIntent().getName();
-        System.out.println("das ist der intentname "+intentName);
-
-        GetCreditBalance creditBalance = new GetCreditBalance();
-        //SpeechletResponse myResponse;
+        Konto konto = new Konto();
 
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+        SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
+        Assert.assertEquals("Soll die handleLimit Methode auswählen", myResponse.getReprompt(), sut.onIntent(myIntentRequest, session).getReprompt());
 
-
-        if(intentName.equals(INTENT_WHATSMYKONTOSTAND))
-        {
-            speech.setText("Ihr Kontostand beträgt "+ creditBalance.getcreditBalance() +" Euro. Vielen Dank, bis zum nächsten Mal.");
-            SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
-            // springe in Methode handleKontostand
-            Assert.assertEquals("Soll die handleKontoStand Methode auswählen", myResponse, sut.onIntent(myIntentRequest, session));
-           // Assert.assertEquals("Soll die handleKontoStand Methode auswählen", speech.getText(), sut.onIntent(myIntentRequest, session));
-        }
-
-        else if(intentName.equals(INTENT_WHATSMYLIMIT)){
-            speech.setText("ich habe eine gewürfelt.");
-            SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
-            // springe in Methode handleLimit
-            Assert.assertEquals("Soll die handleKontoStand Methode auswählen", myResponse, sut.onIntent(myIntentRequest, session));
-          //  Assert.assertEquals("Soll die handleLimit Methode auswählen", speech.getText(), sut.onIntent(myIntentRequest, session));
-        }
-    }
-
-    @Test
-    public void testOnIntentWhatsMyLimit() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("ich habe eine gewürfelt.");
-        SpeechletResponse response =  SpeechletResponse.newTellResponse(speech);
-
-        Assert.assertEquals("Soll verifizieren, ob handleLimit die korrekten Daten zurückgibt", response.getReprompt(), sut.callHandleLimit().getReprompt());
 
     }
 
     @Test
-    public void testOnIntentWhatsMyKontostand() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        int valueKonto = 0;
-        speech.setText("Ihr Kontostand beträgt "+valueKonto+" Euro. Vielen Dank, bis zum nächsten Mal.");
-        SpeechletResponse response =  SpeechletResponse.newTellResponse(speech);
-        Assert.assertEquals("Soll verifizieren, ob handleKOntostand die korrekten Daten zurückgibt", response.getReprompt(), sut.callKonto().getReprompt());
+    public void testKontostandIntent() throws Exception
+    {
+        Intent myIntent = Intent.builder()
+                .withName("Kontostand")
+                .withConfirmationStatus(ConfirmationStatus.CONFIRMED)
+                .build();
+        IntentRequest myIntentRequest = IntentRequest.builder()
+                .withRequestId("123")
+                .withIntent(myIntent)
+                .withLocale(Locale.GERMANY)
+                .build();
+        Session session = Session.builder()
+                .withSessionId("23423")
+                .build();
 
+        Konto konto = new Konto();
+
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+        SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
+        Assert.assertEquals("Soll die handleKontoStand Methode auswählen", myResponse.getReprompt(), sut.onIntent(myIntentRequest, session).getReprompt());
     }
+
 }
