@@ -9,10 +9,10 @@ import org.slf4j.LoggerFactory;
 public class LBBSpeechlet implements Speechlet {
 
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
-    private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
-    private static final String INTENT_WHATSMYLIMIT="Limit";
-    private static final String INTENT_YES="Ja";
-    private static final String INTENT_NO="Nein";
+    private static final String INTENT_WHATSMYKONTOSTAND = "Kontostand";
+    private static final String INTENT_WHATSMYLIMIT = "Limit";
+    private static final String INTENT_YES = "Ja";
+    private static final String INTENT_NO = "Nein";
 
 
     public static void main(String[] args) throws Exception {
@@ -41,18 +41,13 @@ public class LBBSpeechlet implements Speechlet {
     @Override
     public SpeechletResponse onIntent(final IntentRequest request, final Session session) throws SpeechletException {
         log.info("onIntent requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
-        System.out.println("Session:"+session+ " Intent:"+request.getIntent().getName());
+        System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
         String intentName = request.getIntent().getName();
-        if(INTENT_WHATSMYKONTOSTAND.equals(intentName))
-        {
+        if (INTENT_WHATSMYKONTOSTAND.equals(intentName)) {
             return handleKontostand();
-        }
-        else if (INTENT_WHATSMYLIMIT.equals(intentName))
-        {
+        } else if (INTENT_WHATSMYLIMIT.equals(intentName)) {
             return handleLimit();
-        }
-        else
-        {
+        } else {
             throw new SpeechletException("Invalid Intent");
         }
     }
@@ -63,7 +58,6 @@ public class LBBSpeechlet implements Speechlet {
     }
 
 
-
     //  private SpeechletResponse handleKontostand(Session session) {
     private SpeechletResponse handleKontostand() {
         Konto konto = new Konto();
@@ -71,7 +65,7 @@ public class LBBSpeechlet implements Speechlet {
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
@@ -86,7 +80,7 @@ public class LBBSpeechlet implements Speechlet {
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
@@ -94,6 +88,7 @@ public class LBBSpeechlet implements Speechlet {
             return null;
         }
     }
+
     private SpeechletResponse handleLimit() {
         Konto konto = new Konto();
 
@@ -101,8 +96,9 @@ public class LBBSpeechlet implements Speechlet {
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Möchten Sie noch Ihren Kontostand erfahren?");
+            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
+            return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -114,7 +110,7 @@ public class LBBSpeechlet implements Speechlet {
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Möchten Sie noch Ihren Kontostand erfahren");
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
