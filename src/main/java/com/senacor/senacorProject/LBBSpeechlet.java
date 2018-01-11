@@ -14,6 +14,7 @@ public class LBBSpeechlet implements Speechlet {
     private static final String INTENT_WHATSMYKONTOSTANDLIMIT="Kontoubersicht";
     private static final String INTENT_HELP="AMAZON.HelpIntent";
     private static final String INTENT_STOP="AMAZON.StopIntent";
+    Konto konto = new Konto();
 
     public static void main(String[] args) throws Exception {
 
@@ -35,7 +36,7 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
-                "mit dem Wort Limit.Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
+                       "mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
         return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
     }
 
@@ -76,7 +77,7 @@ public class LBBSpeechlet implements Speechlet {
     }
 
     private SpeechletResponse handleKontostand() {
-        Konto konto = new Konto();
+        //Konto konto = new Konto();
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
@@ -104,7 +105,7 @@ public class LBBSpeechlet implements Speechlet {
     }*/
 
     private SpeechletResponse handleLimit() {
-        Konto konto = new Konto();
+        //Konto konto = new Konto();
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
@@ -144,7 +145,7 @@ public class LBBSpeechlet implements Speechlet {
         }
 
     private SpeechletResponse handleKontoubersicht(){
-        Konto konto=new Konto();
+        //Konto konto=new Konto();
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro und ihr Limit "+ konto.getLimit()+" Euro. Vielen Dank und bis zum nächsten Mal.");
