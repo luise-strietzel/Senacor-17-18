@@ -52,6 +52,7 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
             return handleLimit();
+
         }
         else if (INTENT_WHATSMYKONTOSTANDLIMIT.equals(intentName))
         {
@@ -64,6 +65,7 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_STOP.equals(intentName))
         {
             return handleStopIntent();
+
         }
         else
         {
@@ -82,12 +84,14 @@ public class LBBSpeechlet implements Speechlet {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
+
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
     /*private SpeechletResponse handle_weiterer_Kontostand() {
         Konto konto = new Konto();
