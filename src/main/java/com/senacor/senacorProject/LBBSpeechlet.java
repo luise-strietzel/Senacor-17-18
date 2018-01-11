@@ -52,7 +52,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
             return handleLimit();
-
         }
         else if (INTENT_WHATSMYKONTOSTANDLIMIT.equals(intentName))
         {
@@ -65,7 +64,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_STOP.equals(intentName))
         {
             return handleStopIntent();
-
         }
         else
         {
