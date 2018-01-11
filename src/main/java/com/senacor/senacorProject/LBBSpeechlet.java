@@ -59,18 +59,6 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
     }
 
-
-    public SpeechletResponse callKonto()
-    {
-        return handleKontostand();
-    }
-
-
-    public SpeechletResponse callHandleLimit()
-    {
-        return handleLimit();
-    }
-
     //  private SpeechletResponse handleKontostand(Session session) {
     private SpeechletResponse handleKontostand() {
         GetCreditBalance creditBalance = new GetCreditBalance();

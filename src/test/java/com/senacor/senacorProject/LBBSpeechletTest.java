@@ -79,23 +79,5 @@ public class LBBSpeechletTest {
         }
     }
 
-    @Test
-    public void testOnIntentWhatsMyLimit() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("ich habe eine gewürfelt.");
-        SpeechletResponse response =  SpeechletResponse.newTellResponse(speech);
 
-        Assert.assertEquals("Soll verifizieren, ob handleLimit die korrekten Daten zurückgibt", response.getReprompt(), sut.callHandleLimit().getReprompt());
-
-    }
-
-    @Test
-    public void testOnIntentWhatsMyKontostand() {
-        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        int valueKonto = 0;
-        speech.setText("Ihr Kontostand beträgt "+valueKonto+" Euro. Vielen Dank, bis zum nächsten Mal.");
-        SpeechletResponse response =  SpeechletResponse.newTellResponse(speech);
-        Assert.assertEquals("Soll verifizieren, ob handleKOntostand die korrekten Daten zurückgibt", response.getReprompt(), sut.callKonto().getReprompt());
-
-    }
 }
