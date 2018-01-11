@@ -74,6 +74,7 @@ public class LBBSpeechletTest {
         {
             // springe in Methode handleLImit
             Assert.assertEquals("Soll die handleLimit Methode auswählen", kontospeech.getText(), mySpeechlet.callHandleKontostand());
+          //  Assert.assertEquals("Soll die handleLimit Methode auswählen", kontospeech.getText(), sut.onIntent(INTENT_WHATSMYLIMIT.toString(), session));
 
         }
         else if(intent.equals(INTENT_WHATSMYLIMIT))
