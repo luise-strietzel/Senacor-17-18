@@ -11,8 +11,6 @@ public class LBBSpeechlet implements Speechlet {
     private static final Logger log = LoggerFactory.getLogger(LBBSpeechlet.class);
     private static final String INTENT_WHATSMYKONTOSTAND = "Kontostand";
     private static final String INTENT_WHATSMYLIMIT = "Limit";
-    private static final String INTENT_YES = "Ja";
-    private static final String INTENT_NO = "Nein";
 
 
     public static void main(String[] args) throws Exception {
@@ -74,20 +72,20 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
-    private SpeechletResponse handle_weiterer_Kontostand() {
+    /*private SpeechletResponse handle_weiterer_Kontostand() {
         Konto konto = new Konto();
         //System.out.println("wir testen die Methode handle_weiterer_Kontostand");
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Möchten Sie noch Ihr Limit erfahren?");
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
     private SpeechletResponse handleLimit() {
         Konto konto = new Konto();
@@ -104,7 +102,7 @@ public class LBBSpeechlet implements Speechlet {
             return null;
         }
     }
-    private SpeechletResponse handle_weiteres_Limit() {
+   /* private SpeechletResponse handle_weiteres_Limit() {
         Konto konto = new Konto();
         //System.out.println("wir testen die Methode handleLimit");
         try {
@@ -117,7 +115,7 @@ public class LBBSpeechlet implements Speechlet {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
 /*
     private SpeechletResponse handleStopIntent() {
