@@ -35,7 +35,7 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
         speech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
-                "mit dem Wort Limit.");
+                "mit dem Wort Limit.Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
         return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
     }
 
