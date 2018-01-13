@@ -23,7 +23,7 @@ public class LBBSpeechletTest {
 
     @Test
     public void testOnLaunch() throws SpeechletException {
-        String expected = "Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.";
+        String expected = "Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limitmit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.";
         LaunchRequest launchRequest = LaunchRequest.builder()
                 .withRequestId("123")
                 .withLocale(Locale.GERMANY)
