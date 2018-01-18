@@ -1,9 +1,8 @@
 package com.senacor.senacorProject;
 
-import com.amazon.speech.speechlet.LaunchRequest;
-import com.amazon.speech.speechlet.Session;
-import com.amazon.speech.speechlet.SpeechletException;
-import com.amazon.speech.speechlet.SpeechletResponse;
+import com.amazon.speech.slu.ConfirmationStatus;
+import com.amazon.speech.slu.Intent;
+import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,6 +10,14 @@ import org.junit.Test;
 import java.util.Locale;
 
 public class LBBSpeechletTest {
+ /* @Test
+  public void onSessionStarted() throws Exception {
+  }
+
+
+  @Test
+  public void onSessionEnded() throws Exception {
+  }*/
 
     private LBBSpeechlet sut = new LBBSpeechlet();
 
@@ -33,13 +40,52 @@ public class LBBSpeechletTest {
     }
 
     @Test
-    public void testOnIntentWhatsMyLimit() {
-        // Hier Intent aufbauen für Whats my Limit
+    public void testLimitIntent() throws Exception {
+        Intent myIntent = Intent.builder()
+                .withName("Limit")
+                .withConfirmationStatus(ConfirmationStatus.CONFIRMED)
+                .build();
+        IntentRequest myIntentRequest = IntentRequest.builder()
+                .withRequestId("123")
+                .withIntent(myIntent)
+                .withLocale(Locale.GERMANY)
+                .build();
+        Session session = Session.builder()
+                .withSessionId("23423")
+                .build();
+
+        Konto konto = new Konto();
+
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+        SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
+        Assert.assertEquals("Soll die handleLimit Methode auswählen", myResponse.getReprompt(), sut.onIntent(myIntentRequest, session).getReprompt());
+
+
     }
 
     @Test
-    public void testOnIntentWhatsMyKontostand() {
-        // Hier Intent aufbauen für Whats my Kontostand
+    public void testKontostandIntent() throws Exception
+    {
+        Intent myIntent = Intent.builder()
+                .withName("Kontostand")
+                .withConfirmationStatus(ConfirmationStatus.CONFIRMED)
+                .build();
+        IntentRequest myIntentRequest = IntentRequest.builder()
+                .withRequestId("123")
+                .withIntent(myIntent)
+                .withLocale(Locale.GERMANY)
+                .build();
+        Session session = Session.builder()
+                .withSessionId("23423")
+                .build();
 
+        Konto konto = new Konto();
+
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro. Vielen Dank, bis zum nächsten Mal.");
+        SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
+        Assert.assertEquals("Soll die handleKontoStand Methode auswählen", myResponse.getReprompt(), sut.onIntent(myIntentRequest, session).getReprompt());
     }
+
 }
