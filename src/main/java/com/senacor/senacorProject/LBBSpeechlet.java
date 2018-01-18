@@ -14,6 +14,8 @@ public class LBBSpeechlet implements Speechlet {
     private static final String INTENT_WHATSMYKONTOSTANDLIMIT="Kontoubersicht";
     private static final String INTENT_HELP="AMAZON.HelpIntent";
     private static final String INTENT_STOP="AMAZON.StopIntent";
+    private static final String INTENT_JA="AMAZON.YesIntent";
+    private static final String INTENT_NEIN="AMAZON.NoIntent";
     Konto konto = new Konto();
 
     public static void main(String[] args) throws Exception {
@@ -80,10 +82,12 @@ public class LBBSpeechlet implements Speechlet {
 
     private SpeechletResponse handleKontostand() {
         //Konto konto = new Konto();
+        //String intentName = request.getIntent().getName();
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
             System.out.println(speech.getText());
+
 
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
@@ -161,6 +165,20 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
+    private SpeechletResponse Dialog(final IntentRequest request){
+
+        //System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
+
+       String intentName=request.getIntent().getName();
+        if(INTENT_WHATSMYKONTOSTAND.equals(intentName)) {
+            return handleKontostand();
+        }else
+        {
+            return handleLimit();
+        }
+
+    }
+
     private Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
         repromptSpeech.setText("Ich habe Sie nicht verstanden. Bitte fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.");
@@ -168,5 +186,22 @@ public class LBBSpeechlet implements Speechlet {
         reprompt.setOutputSpeech(repromptSpeech);
         return reprompt;
     }
+
+    private static SpeechletResponse newAskResponse(final String outputSpeech, final
+                                                   Reprompt reprompt){
+
+        /*Parameters:
+        outputSpeech - output speech content for the ask voice response
+        reprompt - reprompt speech for the ask voice response. This speech is played if the user does not reply to the question or replies with something that is not understood.
+        */
+        outputSpeech.
+    }
+
+   /* static IntentRequest.Builder builder(){
+
+
+        if ()
+    }
+    */
 }
 
