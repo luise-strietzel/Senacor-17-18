@@ -154,7 +154,6 @@ public class LBBSpeechlet implements Speechlet {
             e.printStackTrace();
             return null;
         }
-
     }
 
     private Reprompt createRepromptSpeech() {
