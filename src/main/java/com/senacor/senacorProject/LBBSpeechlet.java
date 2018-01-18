@@ -52,7 +52,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
             return handleLimit();
-
         }
         else if (INTENT_WHATSMYKONTOSTANDLIMIT.equals(intentName))
         {
@@ -65,7 +64,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_STOP.equals(intentName))
         {
             return handleStopIntent();
-
         }
         else
         {
@@ -96,6 +94,7 @@ public class LBBSpeechlet implements Speechlet {
     /*private SpeechletResponse handle_weiterer_Kontostand() {
         Konto konto = new Konto();
         //System.out.println("wir testen die Methode handle_weiterer_Kontostand");
+
         try {
             //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();

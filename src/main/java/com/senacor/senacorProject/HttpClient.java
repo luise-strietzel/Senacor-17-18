@@ -53,8 +53,8 @@ public class HttpClient {
 
         // Datei als JSON-Objekt einlesen
         JsonObject json = gson.fromJson(reader, JsonObject.class);
+        System.out.println("das ist der Token .:" +token);
         return json;
-
 
     }
 
