@@ -18,13 +18,15 @@ public class LBBSpeechlet implements Speechlet {
     private static final String INTENT_JA="AMAZON.YesIntent";
     private static final String INTENT_NEIN="AMAZON.NoIntent";
     Konto konto = new Konto();
+    boolean kontostand = false;
+    boolean limit = false;
 
     public static void main(String[] args) throws Exception {
 
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
-        mySpeechlet.handleKontostand();
-        mySpeechlet.handleLimit();
-        mySpeechlet.handleKontoubersicht();
+        mySpeechlet.handle_weiterer_Kontostand();
+        //mySpeechlet.handleJaIntent(false,false);
+
 
     }
 
@@ -70,6 +72,14 @@ public class LBBSpeechlet implements Speechlet {
             return handleStopIntent();
 
         }
+        else if (INTENT_JA.equals(intentName))
+        {
+            return handleJaIntent(kontostand, limit);
+        }
+        else if (INTENT_NEIN.equals(intentName))
+        {
+            return handleStopIntent();
+        }
         else
         {
             throw new SpeechletException("Invalid Intent");
@@ -82,15 +92,14 @@ public class LBBSpeechlet implements Speechlet {
     }
 
     private SpeechletResponse handleKontostand() {
-        //Konto konto = new Konto();
-        //String intentName = request.getIntent().getName();
+
         try {
+            limit = true;
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Möchten Sie noch Ihr monatliches Limit erfahren");
             System.out.println(speech.getText());
 
-
-            return SpeechletResponse.newTellResponse(speech);
+            return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -98,27 +107,42 @@ public class LBBSpeechlet implements Speechlet {
     }
 
 
-    /*private SpeechletResponse handle_weiterer_Kontostand() {
-        Konto konto = new Konto();
-        //System.out.println("wir testen die Methode handle_weiterer_Kontostand");
+    private SpeechletResponse handle_weiterer_Kontostand() {
+
         try {
-            //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Möchten Sie noch Ihr Limit erfahren?");
+            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank und bis zum nächsten Mal.");
             System.out.println(speech.getText());
+
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }*/
+    }
 
     private SpeechletResponse handleLimit() {
-        //Konto konto = new Konto();
+
+        try {
+            kontostand = true;
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Möchten Sie noch Ihren Kontostand erfahren?");
+            System.out.println(speech.getText());
+
+            return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+   private SpeechletResponse handle_weiteres_Limit() {
+
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank, bis zum nächsten Mal.");
+            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank und bis zum nächsten Mal.");
             System.out.println(speech.getText());
+
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,35 +150,36 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
-   /* private SpeechletResponse handle_weiteres_Limit() {
-        Konto konto = new Konto();
-        //System.out.println("wir testen die Methode handleLimit");
-        try {
-            //JsonElement myKontostand = myClient.sendGet(myClient.sendPost());
-            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Möchten Sie noch Ihren Kontostand erfahren");
-            System.out.println(speech.getText());
-            return SpeechletResponse.newTellResponse(speech);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }*/
+    private SpeechletResponse handleStopIntent() {
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Vielen Dank und bis zum nächsten Mal.");
+        System.out.println(speech.getText());
+        return SpeechletResponse.newTellResponse(speech);
+    }
 
-        private SpeechletResponse handleStopIntent() {
-            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Vielen Dank und bis zum nächsten Mal.");
-            return SpeechletResponse.newTellResponse(speech);
+    private SpeechletResponse handleHelpIntent() {
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText("Ich habe Sie nicht verstanden. Bitte fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder nach Ihrem Limit mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie Ihr Limit und den Kontostand.");
+        return SpeechletResponse.newTellResponse(speech);
+    }
+
+
+
+    private SpeechletResponse handleJaIntent(boolean willkontostandwissen, boolean willlimitwissen){
+        if(willkontostandwissen == true)
+        {
+            return handle_weiterer_Kontostand();
+        }
+        else if(willlimitwissen == true)
+        {
+            return handle_weiteres_Limit();
         }
 
-        private SpeechletResponse handleHelpIntent() {
-            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ich habe Sie nicht verstanden. Bitte fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder nach Ihrem Limit mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie Ihr Limit und den Kontostand.");
-            return SpeechletResponse.newTellResponse(speech);
-        }
+        return null;
+    }
 
     private SpeechletResponse handleKontoubersicht(){
-        //Konto konto=new Konto();
+
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
             speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro und ihr Limit "+ konto.getLimit()+" Euro. Vielen Dank und bis zum nächsten Mal.");
@@ -166,7 +191,7 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
-    private SpeechletResponse Dialog(final IntentRequest request){
+    /*private SpeechletResponse Dialog(final IntentRequest request){
 
         //System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
 
@@ -178,11 +203,12 @@ public class LBBSpeechlet implements Speechlet {
             return handleLimit();
         }
 
-    }
+    }*/
 
     private Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
-        repromptSpeech.setText("Ich habe Sie nicht verstanden. Bitte fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand.");
+        repromptSpeech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
+                               "mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(repromptSpeech);
         return reprompt;
@@ -207,16 +233,16 @@ public class LBBSpeechlet implements Speechlet {
     }
     */
 
-    public static SpeechletResponse newAskResponse(final OutputSpeech outputSpeech,
+    /*public static SpeechletResponse newAskResponse(final OutputSpeech outputSpeech,
                                                    final Reprompt reprompt) {
-        /*if (outputSpeech == null) {
-            throw new IllegalArgumentException("OutputSpeech cannot be null");
-        }
+        //if (outputSpeech == null) {
+         //   throw new IllegalArgumentException("OutputSpeech cannot be null");
+        //}
 
-        if (reprompt == null) {
-            throw new IllegalArgumentException("Reprompt cannot be null");
-        }
-        */
+        //if (reprompt == null) {
+         //   throw new IllegalArgumentException("Reprompt cannot be null");
+        //}
+
 
         SpeechletResponse response = new SpeechletResponse();
         response.setNullableShouldEndSession(false);
@@ -224,6 +250,6 @@ public class LBBSpeechlet implements Speechlet {
         response.setReprompt(reprompt);
         return response;
     }
-
+    */
 }
 
