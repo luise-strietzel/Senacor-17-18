@@ -87,5 +87,4 @@ public class LBBSpeechletTest {
         SpeechletResponse myResponse = SpeechletResponse.newTellResponse(speech);
         Assert.assertEquals("Soll die handleKontoStand Methode auswählen", myResponse.getReprompt(), sut.onIntent(myIntentRequest, session).getReprompt());
     }
-
 }
