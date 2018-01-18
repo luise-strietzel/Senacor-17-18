@@ -1,6 +1,7 @@
 package com.senacor.senacorProject;
 
 import com.amazon.speech.speechlet.*;
+import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import org.slf4j.Logger;
@@ -187,14 +188,16 @@ public class LBBSpeechlet implements Speechlet {
         return reprompt;
     }
 
-    private static SpeechletResponse newAskResponse(final String outputSpeech, final
+    /**static SpeechletResponse newAskResponse(final String outputSpeech, final
                                                    Reprompt reprompt){
 
         /*Parameters:
         outputSpeech - output speech content for the ask voice response
         reprompt - reprompt speech for the ask voice response. This speech is played if the user does not reply to the question or replies with something that is not understood.
-        */
-        outputSpeech.
+
+         //final String outputSpeech1 = outputSpeech;
+
+        return SpeechletResponse.newTellResponse(speech);
     }
 
    /* static IntentRequest.Builder builder(){
@@ -203,5 +206,24 @@ public class LBBSpeechlet implements Speechlet {
         if ()
     }
     */
+
+    public static SpeechletResponse newAskResponse(final OutputSpeech outputSpeech,
+                                                   final Reprompt reprompt) {
+        /*if (outputSpeech == null) {
+            throw new IllegalArgumentException("OutputSpeech cannot be null");
+        }
+
+        if (reprompt == null) {
+            throw new IllegalArgumentException("Reprompt cannot be null");
+        }
+        */
+
+        SpeechletResponse response = new SpeechletResponse();
+        response.setNullableShouldEndSession(false);
+        response.setOutputSpeech(outputSpeech);
+        response.setReprompt(reprompt);
+        return response;
+    }
+
 }
 
