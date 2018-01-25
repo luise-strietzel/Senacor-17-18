@@ -57,7 +57,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
             return handleLimit();
-
         }
         else if (INTENT_WHATSMYKONTOSTANDLIMIT.equals(intentName))
         {
@@ -70,7 +69,6 @@ public class LBBSpeechlet implements Speechlet {
         else if (INTENT_STOP.equals(intentName))
         {
             return handleStopIntent();
-
         }
         else if (INTENT_JA.equals(intentName))
         {
@@ -105,7 +103,6 @@ public class LBBSpeechlet implements Speechlet {
             return null;
         }
     }
-
 
     private SpeechletResponse handle_weiterer_Kontostand() {
 

@@ -55,7 +55,6 @@ public class HttpClient {
         JsonObject json = gson.fromJson(reader, JsonObject.class);
         return json;
 
-
     }
 
     public String sendPost() throws Exception {
