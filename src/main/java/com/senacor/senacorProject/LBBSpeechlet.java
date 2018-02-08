@@ -25,9 +25,6 @@ public class LBBSpeechlet implements Speechlet {
 
         LBBSpeechlet mySpeechlet = new LBBSpeechlet();
         mySpeechlet.handle_weiterer_Kontostand();
-        //mySpeechlet.handleJaIntent(false,false);
-
-
     }
 
 
@@ -188,20 +185,6 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
-    /*private SpeechletResponse Dialog(final IntentRequest request){
-
-        //System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
-
-       String intentName=request.getIntent().getName();
-        if(INTENT_WHATSMYKONTOSTAND.equals(intentName)) {
-            return handleKontostand();
-        }else
-        {
-            return handleLimit();
-        }
-
-    }*/
-
     private Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
         repromptSpeech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
@@ -210,43 +193,5 @@ public class LBBSpeechlet implements Speechlet {
         reprompt.setOutputSpeech(repromptSpeech);
         return reprompt;
     }
-
-    /**static SpeechletResponse newAskResponse(final String outputSpeech, final
-                                                   Reprompt reprompt){
-
-        /*Parameters:
-        outputSpeech - output speech content for the ask voice response
-        reprompt - reprompt speech for the ask voice response. This speech is played if the user does not reply to the question or replies with something that is not understood.
-
-         //final String outputSpeech1 = outputSpeech;
-
-        return SpeechletResponse.newTellResponse(speech);
-    }
-
-   /* static IntentRequest.Builder builder(){
-
-
-        if ()
-    }
-    */
-
-    /*public static SpeechletResponse newAskResponse(final OutputSpeech outputSpeech,
-                                                   final Reprompt reprompt) {
-        //if (outputSpeech == null) {
-         //   throw new IllegalArgumentException("OutputSpeech cannot be null");
-        //}
-
-        //if (reprompt == null) {
-         //   throw new IllegalArgumentException("Reprompt cannot be null");
-        //}
-
-
-        SpeechletResponse response = new SpeechletResponse();
-        response.setNullableShouldEndSession(false);
-        response.setOutputSpeech(outputSpeech);
-        response.setReprompt(reprompt);
-        return response;
-    }
-    */
 }
 

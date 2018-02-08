@@ -1,6 +1,5 @@
 package com.senacor.senacorProject;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,12 +31,6 @@ public class HttpClientTest {
         String result = sut.sendGet().toString();
 
         Assert.assertEquals("SendPostMethode richtig ausgeführt? ", expected , result);
-
-    }
-
-    @After  //räumt auf. Beim Testen mit der Datenbank nützlich,da Daten eingelesen und gespeichert werden
-    public void tearDown()
-    {
 
     }
 
