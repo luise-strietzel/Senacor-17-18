@@ -16,7 +16,7 @@ public class Konto {
 
             if (token != null) {
                 warErfolgreich = true;
-                kontodaten = httpclient.sendGet(username, password, token);
+                kontodaten = httpclient.sendGet(token);
             } else {
                 warErfolgreich = false;
             }
