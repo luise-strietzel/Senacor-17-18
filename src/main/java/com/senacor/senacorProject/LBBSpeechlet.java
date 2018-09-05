@@ -1,5 +1,6 @@
 package com.senacor.senacorProject;
 
+import com.amazon.speech.slu.Intent;
 import com.amazon.speech.speechlet.*;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
@@ -13,6 +14,8 @@ public class LBBSpeechlet implements Speechlet {
     private static final String INTENT_WHATSMYKONTOSTAND="Kontostand";
     private static final String INTENT_WHATSMYLIMIT="Limit";
     private static final String INTENT_WHATSMYKONTOSTANDLIMIT="Kontoubersicht";
+    private static final String INTENT_USERNAME="Benutzername";
+    private static final String INTENT_PASSWORT="Passwort";
     private static final String INTENT_HELP="AMAZON.HelpIntent";
     private static final String INTENT_STOP="AMAZON.StopIntent";
     private static final String INTENT_JA="AMAZON.YesIntent";
@@ -20,6 +23,9 @@ public class LBBSpeechlet implements Speechlet {
     Konto konto = new Konto();
     boolean kontostand = false;
     boolean limit = false;
+
+    String username;
+    String password;
 
     public static void main(String[] args) throws Exception {
 
@@ -37,9 +43,9 @@ public class LBBSpeechlet implements Speechlet {
     public SpeechletResponse onLaunch(final LaunchRequest request, final Session session) throws SpeechletException {
         log.info("onLaunch requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-        speech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
-                       "mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
-        return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
+        speech.setText("Willkommen im LBB-Konto. Bitte nennen Sie mir ihren Benutzernamen mit folgender Anweisung. Mein Benutzername ist.");
+        System.out.println(speech.getText());
+        return SpeechletResponse.newAskResponse(speech, benutzernameRepromptSpeech());
     }
 
     @Override
@@ -47,9 +53,18 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onIntent requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
         System.out.println("Session:" + session + " Intent:" + request.getIntent().getName());
         String intentName = request.getIntent().getName();
+
         if(INTENT_WHATSMYKONTOSTAND.equals(intentName))
         {
             return handleKontostand();
+        }
+        else if (INTENT_USERNAME.equals(intentName))
+        {
+            return benutzername(request, session);
+        }
+        else if (INTENT_PASSWORT.equals(intentName))
+        {
+            return password(request, session);
         }
         else if (INTENT_WHATSMYLIMIT.equals(intentName))
         {
@@ -86,12 +101,92 @@ public class LBBSpeechlet implements Speechlet {
         log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(), session.getSessionId());
     }
 
+    private SpeechletResponse benutzername(IntentRequest intent, Session session) {
+        try {
+            username = intent.getIntent().getSlots().get("username").getValue();
+
+            //System.out.println( username);
+
+            PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            speech.setText("Ihr Benutzername ist " + username + ". Bitte nennen Sie ihr Passwort mit folgender Anweisung. Mein Passwort ist.");
+
+            session.setAttribute("username", username);
+            System.out.println(speech.getText());
+
+            return SpeechletResponse.newAskResponse(speech, passwordRepromptSpeech());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private SpeechletResponse password(IntentRequest intent, Session session) {
+        try {
+            password = intent.getIntent().getSlots().get("password").getValue();
+
+            //System.out.println( password);
+
+            //PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+            //speech.setText("Anmeldeversuch");
+
+            session.setAttribute("password", password);
+
+
+            boolean anmeldungErfolgreich = konto.meldeAn(username, password);
+            if (anmeldungErfolgreich) {
+                return handleWillkommen();
+            } else {
+                return handleFalscheAnmeldung();
+            }
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static SpeechletResponse handleWillkommen() {
+       try {
+                PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+                speech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
+                        "mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
+                System.out.println(speech.getText());
+
+                return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
+             }
+       catch (Exception e) {
+           e.printStackTrace();
+           return null;
+       }
+    }
+
+    private static SpeechletResponse handleFalscheAnmeldung() {
+        try {
+                PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+                speech.setText("Ihr Benutzername oder Passwort war nicht richtig. Die Anmeldung ist fehlgeschlagen.");
+                System.out.println(speech.getText());
+
+                return SpeechletResponse.newTellResponse(speech);
+            }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private SpeechletResponse handleKontostand() {
 
         try {
             limit = true;
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Möchten Sie noch Ihr monatliches Limit erfahren");
+            Float kontostand = konto.getKontostand();
+            if (kontostand != null) {
+                speech.setText("Ihr Kontostand beträgt " + kontostand + " Euro. Möchten Sie noch Ihr monatliches Limit erfahren");
+            }else{
+                speech.setText("Sie sind nicht angemeldet.");
+            }
             System.out.println(speech.getText());
 
             return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
@@ -105,7 +200,12 @@ public class LBBSpeechlet implements Speechlet {
 
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt " + konto.getKontostand() + " Euro. Vielen Dank und bis zum nächsten Mal.");
+            Float kontostand = konto.getKontostand();
+            if (kontostand != null) {
+                speech.setText("Ihr Kontostand beträgt " + kontostand + " Euro. Vielen Dank und bis zum nächsten Mal.");
+            } else {
+                speech.setText("Sie sind nicht angemeldet.");
+            }
             System.out.println(speech.getText());
 
             return SpeechletResponse.newTellResponse(speech);
@@ -120,7 +220,12 @@ public class LBBSpeechlet implements Speechlet {
         try {
             kontostand = true;
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Möchten Sie noch Ihren Kontostand erfahren?");
+            Float limit = konto.getLimit();
+            if (limit != null) {
+                speech.setText("Ihr Limit beträgt " + limit + " Euro. Möchten Sie noch Ihren Kontostand erfahren?");
+            }else{
+                speech.setText("Sie sind nicht angemeldet.");
+            }
             System.out.println(speech.getText());
 
             return SpeechletResponse.newAskResponse(speech, createRepromptSpeech());
@@ -134,8 +239,13 @@ public class LBBSpeechlet implements Speechlet {
 
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Limit beträgt " + konto.getLimit() + " Euro. Vielen Dank und bis zum nächsten Mal.");
-            System.out.println(speech.getText());
+            Float limit = konto.getLimit();
+            if (limit != null) {
+                speech.setText("Ihr Limit beträgt " + limit + " Euro. Vielen Dank und bis zum nächsten Mal.");
+            }else{
+                speech.setText("Sie sind nicht angemeldet.");
+            }
+                System.out.println(speech.getText());
 
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
@@ -176,7 +286,13 @@ public class LBBSpeechlet implements Speechlet {
 
         try {
             PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
-            speech.setText("Ihr Kontostand beträgt "+ konto.getKontostand() +" Euro und ihr Limit "+ konto.getLimit()+" Euro. Vielen Dank und bis zum nächsten Mal.");
+            Float kontostand = konto.getKontostand();
+            Float limit = konto.getLimit();
+            if (limit != null && kontostand != null) {
+                speech.setText("Ihr Kontostand beträgt " + kontostand + " Euro und ihr Limit " + limit + " Euro. Vielen Dank und bis zum nächsten Mal.");
+            }else{
+                speech.setText("Sie sind nicht angemeldet.");
+            }
             System.out.println(speech.getText());
             return SpeechletResponse.newTellResponse(speech);
         } catch (Exception e) {
@@ -185,10 +301,26 @@ public class LBBSpeechlet implements Speechlet {
         }
     }
 
-    private Reprompt createRepromptSpeech() {
+    private static Reprompt createRepromptSpeech() {
         PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
         repromptSpeech.setText("Willkommen im LBB-Konto. Fragen Sie mich nach Ihrem Kontostand mit dem Wort Kontostand oder fragen Sie mich nach Ihrem Limit" +
                                "mit dem Wort Limit. Mit dem Wort Kontoübersicht erhalten Sie ihr Limit und Kontostand.");
+        Reprompt reprompt = new Reprompt();
+        reprompt.setOutputSpeech(repromptSpeech);
+        return reprompt;
+    }
+
+    private Reprompt passwordRepromptSpeech() {
+        PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
+        repromptSpeech.setText("Ich habe sie nicht verstanden. Bitte widerholen sie ihr Passwort.");
+        Reprompt reprompt = new Reprompt();
+        reprompt.setOutputSpeech(repromptSpeech);
+        return reprompt;
+    }
+
+    private Reprompt benutzernameRepromptSpeech() {
+        PlainTextOutputSpeech repromptSpeech = new PlainTextOutputSpeech();
+        repromptSpeech.setText("Ich habe sie nicht verstanden. Bitte widerholen sie ihren Benutzernamen.");
         Reprompt reprompt = new Reprompt();
         reprompt.setOutputSpeech(repromptSpeech);
         return reprompt;

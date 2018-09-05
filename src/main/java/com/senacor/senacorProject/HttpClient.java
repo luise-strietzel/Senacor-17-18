@@ -1,6 +1,7 @@
 package com.senacor.senacorProject;
 
 
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
@@ -23,21 +24,28 @@ public class HttpClient {
 
     private final String USER_AGENT = "Google Chrome/61.0 Mozilla/5.0 Firefox/26.0";
     private JsonObject kontostand;
+    //LBBSpeechlet lbb = new LBBSpeechlet();
 
-    private static JsonObject setKontostand() throws Exception
+    public static void main(String[] args) throws Exception {
+
+        HttpClient httpClient = new HttpClient();
+        httpClient.sendPost("keks", "password" );
+    }
+
+    /*
+    private static JsonObject setKontostand(String username) throws Exception
     {
         HttpClient http = new HttpClient();
-        http.kontostand = http.sendGet();
+        http.kontostand = http.sendGet(username);
         return http.kontostand;
     }
 
     public static JsonObject getKontostand() throws Exception{
         setKontostand();
         return setKontostand();
-    }
+    }*/
 
-    public JsonObject sendGet() throws Exception {
-        String token = sendPost();
+    public JsonObject sendGet(String token) throws Exception {
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/program/ada";
 
         org.apache.http.client.HttpClient client = HttpClientBuilder.create().build();
@@ -57,7 +65,7 @@ public class HttpClient {
 
     }
 
-    public String sendPost() throws Exception {
+    public String sendPost(String username, String password) throws Exception {
 
         String url = "http://ec2-18-194-12-73.eu-central-1.compute.amazonaws.com/api/oauth/token";
 
@@ -68,8 +76,8 @@ public class HttpClient {
         post.addHeader("Authorization", "Basic a2tiOnNlY3JldA==");
 
         List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair("username", "edieser"));
-        nameValuePairs.add(new BasicNameValuePair("password", "password"));
+        nameValuePairs.add(new BasicNameValuePair("username", username));
+        nameValuePairs.add(new BasicNameValuePair("password", password));
         nameValuePairs.add(new BasicNameValuePair("device_id", "2a32cd35b93e01307a10cba4fe01202c1394a7fe29"));
         nameValuePairs.add(new BasicNameValuePair("device_type", "PC"));
         nameValuePairs.add(new BasicNameValuePair("sms_tan", "0108"));
@@ -82,7 +90,12 @@ public class HttpClient {
         HttpResponse response = client.execute(post);
 
         JSONObject json_auth = new JSONObject(EntityUtils.toString(response.getEntity()));
-        String token = json_auth.getString("access_token");
+
+        boolean anmeldungErfolgreich = json_auth.has("access_token");
+        String token = null;
+        if (anmeldungErfolgreich) {
+            token = json_auth.getString("access_token");
+        }
 
         return token;
 
